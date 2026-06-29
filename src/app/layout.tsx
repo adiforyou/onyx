@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { ClerkProvider } from '@clerk/nextjs'
 import {Manrope} from "next/font/google"
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme";
+import { ThemeProvider } from "@/components/theme"
+import { Toaster } from "sonner";
 const manrope = Manrope({subsets: ['latin']})
 
 export const metadata: Metadata = {
-  title: "Opal",
-  description: "Share AI powered videos with your friends.",
+  title: "Onyx",
+  description: "AI-powered video messaging. Record, share, and let AI do the rest.",
 };
 
 export default function RootLayout({
@@ -17,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${manrope.className} bg-[#171717] `}>
           <ThemeProvider
@@ -27,6 +28,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
           {children}
+          <Toaster theme="dark" richColors />
           </ThemeProvider>
           </body>
     </html>

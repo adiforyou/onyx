@@ -25,8 +25,11 @@ model User {
   notification Notification[]
   sender       Invite[]       @relation("sender")
   reciever     Invite[]       @relation("reciever")
-  trial        Boolean        @default(false)
-  
+  trial           Boolean        @default(false)
+  notifyOnView    Boolean        @default(true)
+  notifyOnInvite  Boolean        @default(true)
+  comments        Comment[]
+  replies         Reply[]
 }
 
 enum PRESET{
@@ -80,21 +83,55 @@ model Folder {
 }
   
 model Video {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title       String?    @default("Untilted Video")
-  description String?    @default("No Description")
-  source      String     @unique
-  createdAt   DateTime   @default(now())
-  Folder      Folder?    @relation(fields: [folderId], references: [id], onDelete: Cascade)
-  folderId    String?    @db.Uuid
-  User        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String?    @db.Uuid
-  processing  Boolean    @default(true)
-  WorkSpace   WorkSpace? @relation(fields: [workSpaceId], references: [id], onDelete: Cascade)
-  workSpaceId String?    @db.Uuid
-  views       Int        @default(0)
+  id          String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String?         @default("Untilted Video")
+  description String?         @default("No Description")
+  source      String          @unique
+  createdAt   DateTime        @default(now())
+  Folder      Folder?         @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  folderId    String?         @db.Uuid
+  User        User?           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String?         @db.Uuid
+  processing  Boolean         @default(false)
+  WorkSpace   WorkSpace?      @relation(fields: [workSpaceId], references: [id], onDelete: Cascade)
+  workSpaceId String?         @db.Uuid
+  views       Int             @default(0)
   summery     String?
- 
+  password    String?
+  comments    Comment[]
+  reactions   VideoReaction[]
+}
+
+model VideoReaction {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  videoId String @db.Uuid
+  Video   Video  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  emoji   String
+  count   Int    @default(1)
+
+  @@unique([videoId, emoji])
+}
+
+model Comment {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content    String
+  createdAt  DateTime @default(now())
+  Video      Video?   @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  videoId    String?  @db.Uuid
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?  @db.Uuid
+  guestName  String?
+  reply      Reply[]
+}
+
+model Reply {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  content   String
+  createdAt DateTime @default(now())
+  Comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String?  @db.Uuid
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.Uuid
 }
 model Member {
   id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -128,4 +165,13 @@ model Invite {
 enum SUBSCRIPTION_PLAN {
   PRO
   FREE
+}
+
+model EarlyAccessRequest {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  email     String
+  message   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
 }

@@ -75,6 +75,7 @@ export const getAllUserVideos = async (workSpaceId:string) => {
                 createdAt:true,
                 source:true,
                 processing:true,
+                views:true,
                 Folder:{
                     select:{
                         id:true,
@@ -102,6 +103,74 @@ export const getAllUserVideos = async (workSpaceId:string) => {
         return {status: 400}
     }
 }
+export const createFolder = async (workspaceId: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403 }
+    const folder = await client.folder.create({
+      data: { workSpaceId: workspaceId },
+    })
+    return { status: 200, data: folder }
+  } catch {
+    return { status: 500 }
+  }
+}
+
+export const renameFolder = async (folderId: string, name: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403 }
+    await client.folder.update({
+      where: { id: folderId },
+      data: { name },
+    })
+    return { status: 200 }
+  } catch {
+    return { status: 500 }
+  }
+}
+
+export const deleteFolder = async (folderId: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403 }
+    await client.folder.delete({ where: { id: folderId } })
+    return { status: 200 }
+  } catch {
+    return { status: 500 }
+  }
+}
+
+export const createWorkspace = async (name: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403 }
+    const dbUser = await client.user.findUnique({
+      where: { clerkid: user.id },
+      select: { id: true, subscription: { select: { plan: true } } },
+    })
+    if (!dbUser) return { status: 404 }
+    if (dbUser.subscription?.plan !== "PRO") return { status: 401, message: "Upgrade to Pro to create team workspaces" }
+    const workspace = await client.workSpace.create({
+      data: { name, type: "PUBLIC", userId: dbUser.id },
+    })
+    return { status: 200, data: workspace }
+  } catch {
+    return { status: 500 }
+  }
+}
+
+export const removeMember = async (memberId: string) => {
+  try {
+    const user = await currentUser()
+    if (!user) return { status: 403 }
+    await client.member.delete({ where: { id: memberId } })
+    return { status: 200 }
+  } catch {
+    return { status: 500 }
+  }
+}
+
 export const getWorkSpaces = async () => {
     try {
       const user = await currentUser()

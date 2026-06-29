@@ -1,16 +1,9 @@
-import React from 'react'
-import LandingPageNavBar from './_components/navbar'
+import React from "react"
 
-type Props = {
-    children:React.ReactNode
-}
-const Layout = ({children}:Props) => {
-  return (
-    <div className='flex flex-col py-10 px-10 xl:px-0 container'>
-        <LandingPageNavBar/>
-        {children}
-    </div>
-  )
+type Props = { children: React.ReactNode }
+
+const Layout = ({ children }: Props) => {
+  return <div className="min-h-screen bg-[#0a0a0a] text-white">{children}</div>
 }
 
 export default Layout
