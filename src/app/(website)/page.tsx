@@ -21,10 +21,10 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$12",
-    period: "per month",
+    price: "Free",
+    period: "during beta",
     features: ["Unlimited video length", "Unlimited workspaces", "Full AI features", "1080p recording", "Advanced analytics", "Team invites", "Priority support"],
-    cta: "Upgrade to Pro",
+    cta: "Request Early Access",
     highlighted: true,
   },
 ]
@@ -204,7 +204,7 @@ const Page = () => {
       <section id="pricing" className="px-4 py-24 max-w-4xl mx-auto">
         <div className="text-center mb-14">
           <h2 className="text-4xl font-bold mb-4">Simple, transparent pricing</h2>
-          <p className="text-[#9d9d9d] text-lg">Start free. Upgrade when you need more.</p>
+          <p className="text-[#9d9d9d] text-lg">Start free. Pro is free during early access — paid plan coming soon.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {plans.map((plan) => (
@@ -217,7 +217,7 @@ const Page = () => {
               }`}
             >
               {plan.highlighted && (
-                <span className="text-xs font-bold text-[#7320DD] uppercase tracking-widest">Most Popular</span>
+                <span className="text-xs font-bold text-[#7320DD] uppercase tracking-widest">Early Access · Paid plan coming soon</span>
               )}
               <div>
                 <h3 className="text-xl font-bold">{plan.name}</h3>
@@ -269,7 +269,7 @@ const Page = () => {
           <div className="w-6 h-6 rounded bg-[#7320DD] flex items-center justify-center text-white font-black text-xs">O</div>
           <span className="font-bold text-white">Onyx</span>
         </div>
-        <p className="text-[#555] text-sm">© 2025 Onyx. All rights reserved.</p>
+        <p className="text-[#555] text-sm">© 2026 Onyx. All rights reserved.</p>
         <div className="flex gap-6 text-sm text-[#555]">
           <a href="#" className="hover:text-white transition">Privacy</a>
           <a href="#" className="hover:text-white transition">Terms</a>
